@@ -1,42 +1,37 @@
 # 🏪 Fiambrería Analytics Bot
 
-Bot de Telegram para registro y análisis financiero automático de fiambrerías y comercios pequeños.
+Bot de Telegram para registro y análisis financiero automático de fiambrerías y pequeños comercios.
+
+> ⚠️ **IMPORTANTE**: Este proyecto está en desarrollo activo. No usar en producción sin revisar la configuración de seguridad.
 
 ## 🎯 Características
 
-- 📊 Registro de ingresos y egresos en tiempo real
-- 💰 Cálculo automático de flujo de caja (diario/mensual)
-- 📈 Análisis con pandas y proyecciones
-- 🔔 Notificaciones de pagos pendientes
-- 📑 Almacenamiento en Google Sheets
-- 🤖 100% automatizado vía Telegram
+- 📊 **Registro automático** de ingresos y egresos vía Telegram
+- 💰 **Análisis en tiempo real** con pandas
+- 📈 **Proyecciones financieras** basadas en histórico
+- 🔔 **Notificaciones inteligentes** de pagos pendientes
+- 📑 **Backup automático** en Google Sheets
+- 🤖 **100% conversacional** - sin necesidad de apps adicionales
 
-## 🚀 Stack Tecnológico
+## 🛠️ Stack Tecnológico
 
-- Python 3.10+
-- python-telegram-bot
-- pandas
-- gspread (Google Sheets API)
-- systemd (deploy)
+- **Python 3.10+**
+- **python-telegram-bot** - Interfaz con Telegram
+- **pandas** - Análisis de datos
+- **gspread** - Integración con Google Sheets
+- **python-dotenv** - Gestión de configuración
 
 ## 📦 Instalación
 
+### Prerequisitos
+
+- Python 3.10 o superior
+- Cuenta de Google Cloud (para Google Sheets API)
+- Bot de Telegram (crear con [@BotFather](https://t.me/BotFather))
+
+### Pasos
+
+1. **Clonar repositorio**
 ```bash
-# Clonar repo
-git clone https://github.com/tu-usuario/fiambreria-analytics-bot.git
+git clone https://github.com/ph-cabral/fiambreria-analytics-bot.git
 cd fiambreria-analytics-bot
-
-# Entorno virtual
-python3 -m venv venv
-source venv/bin/activate
-
-# Dependencias
-pip install -r requirements.txt
-
-# Configurar .env (ver .env.example)
-cp .env.example .env
-nano .env
-
-# Ejecutar
-python main.py
-

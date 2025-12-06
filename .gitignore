@@ -1,32 +1,78 @@
-
----
-
-## **Archivo .gitignore importante:**
-
-```gitignore
-# Credenciales
+# ===== CREDENCIALES Y SECRETS =====
 .env
+.env.*
+!.env.example
 credential.json
 *.json
+secrets/
+*.pem
+*.key
 
-# Python
+# ===== PYTHON =====
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ===== ENTORNOS VIRTUALES =====
 venv/
 env/
+ENV/
 .venv
+.ENV
 
-# IDE
+# ===== IDEs =====
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.project
+.pydevproject
 
-# Sistema
+# ===== SISTEMA OPERATIVO =====
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Logs
+# ===== LOGS Y BASES DE DATOS =====
 *.log
 logs/
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== JUPYTER NOTEBOOKS =====
+.ipynb_checkpoints
+*.ipynb
+
+# ===== PYTEST =====
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ===== MYPY =====
+.mypy_cache/
+.dmypy.json
+dmypy.json

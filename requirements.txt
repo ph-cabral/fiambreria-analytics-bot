@@ -1,0 +1,11 @@
+telegram-bot
+python
+pandas
+google-sheets
+finance
+analytics
+small-business
+cash-flow
+automation
+fiambreria
+retail
