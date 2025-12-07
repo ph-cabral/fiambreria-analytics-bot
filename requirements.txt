@@ -1,11 +1,6 @@
-telegram-bot
-python
+python-telegram-bot==20.7
+sqlalchemy
+python-dotenv
+psycopg2-binary
+openai
 pandas
-google-sheets
-finance
-analytics
-small-business
-cash-flow
-automation
-fiambreria
-retail
