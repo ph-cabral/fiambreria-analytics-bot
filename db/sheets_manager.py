@@ -125,6 +125,20 @@ class SheetsManager:
         if 1 <= indice < len(todas_filas):
             return todas_filas[indice]
         return None
-
+    
+    def eliminar_ultimo_movimiento_cliente(self):
+        """Elimina el último movimiento de Cliente (para correcciones)"""
+        hoja = self.obtener_hoja_mes()
+        todas_filas = hoja.get_all_values()
+        
+        # Buscar de abajo hacia arriba el último Cliente
+        for i in range(len(todas_filas) - 1, 0, -1):
+            if len(todas_filas[i]) >= 3 and todas_filas[i][2] == "Cliente":
+                hoja.delete_rows(i + 1)  # +1 porque gspread usa índice 1-based
+                self._hoja_cache = None
+                print(f"🗑️ Eliminado ingreso de Cliente (fila {i+1})")
+                return True
+        
+        return False
 # Instancia global
 sheets_manager = SheetsManager()

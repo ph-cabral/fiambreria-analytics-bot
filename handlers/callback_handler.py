@@ -22,7 +22,7 @@ async def callback_menu_proveedor(query, data):
     keyboard = crear_teclado_proveedores(monto)
     
     await query.edit_message_text(
-        f"í²° Monto: ${formatear_monto(monto)}\n\n"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(monto)}\n\n"
         "SeleccionÃ¡ el proveedor:",
         reply_markup=keyboard
     )
@@ -32,13 +32,13 @@ async def callback_menu_gasto(query, data):
     monto = float(data.split(":")[2])
     
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("í·‘ï¸ Desperdicio", callback_data=f"gasto:desperdicio:{monto}")],
-        [InlineKeyboardButton("í²µ Gastos (100%)", callback_data=f"gasto:nosotros:{monto}")],
-        [InlineKeyboardButton("í·€ MercaderÃ­a (70%)", callback_data=f"gasto:mercaderia:{monto}")]
+        [InlineKeyboardButton("ï¿½ï¿½ï¿½ï¸ Desperdicio", callback_data=f"gasto:desperdicio:{monto}")],
+        [InlineKeyboardButton("ï¿½ï¿½ï¿½ Gastos (100%)", callback_data=f"gasto:nosotros:{monto}")],
+        [InlineKeyboardButton("ï¿½ï¿½ï¿½ MercaderÃ­a (70%)", callback_data=f"gasto:mercaderia:{monto}")]
     ])
     
     await query.edit_message_text(
-        f"í²° Monto: ${formatear_monto(monto)}\n\n"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(monto)}\n\n"
         "SeleccionÃ¡ el tipo de gasto:",
         reply_markup=keyboard
     )
@@ -48,23 +48,25 @@ async def callback_gasto(query, data):
     partes = data.split(":")
     tipo_gasto = partes[1]
     monto_original = float(partes[2])
+        # ğŸ†• ELIMINAR EL INGRESO DE CLIENTE
+    sheets_manager.eliminar_ultimo_movimiento_cliente()
     
     hora_actual = datetime.now().strftime("%H:%M")
     
     if tipo_gasto == "desperdicio":
         sheets_manager.registrar_movimiento("Desperdicio", -abs(monto_original), hora=hora_actual, pagado=True)
-        descripcion = "í·‘ï¸ Desperdicio"
+        descripcion = "ï¿½ï¿½ï¿½ï¸ Desperdicio"
         monto_final = monto_original
         
     elif tipo_gasto == "nosotros":
         sheets_manager.registrar_movimiento("Nosotros", -abs(monto_original), hora=hora_actual, pagado=True)
-        descripcion = "í½»í²¸ Gastos (Nosotros)"
+        descripcion = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Gastos (Nosotros)"
         monto_final = monto_original
         
     elif tipo_gasto == "mercaderia":
         monto_calculado = monto_original * 0.7
         sheets_manager.registrar_movimiento("Mercaderia", -abs(monto_calculado), hora=hora_actual, pagado=True)
-        descripcion = "í·€í»’ MercaderÃ­a (70%)"
+        descripcion = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MercaderÃ­a (70%)"
         monto_final = monto_calculado
     
     finance_service.invalidar_cache()
@@ -74,9 +76,9 @@ async def callback_gasto(query, data):
     
     mensaje = (
         f"âœ… {descripcion}\n"
-        f"í²¸ Monto: ${formatear_monto(monto_final)} ({hora_actual})\n"
-        f"í³† Total egresos dÃ­a: ${formatear_monto(abs(totales_dia['egresos']))}\n"
-        f"í³Š Estado mes: ${formatear_monto(totales_mes['neto'])}"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(monto_final)} ({hora_actual})\n"
+        f"ï¿½ï¿½ï¿½ Total egresos dÃ­a: ${formatear_monto(abs(totales_dia['egresos']))}\n"
+        f"ï¿½ï¿½ï¿½ Estado mes: ${formatear_monto(totales_mes['neto'])}"
     )
     
     await query.edit_message_text(mensaje)
@@ -95,9 +97,9 @@ async def manejar_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         procesados.add(query.id)
 
         data = query.data
-        print(f"í³¥ Callback: {data}")
+        print(f"ï¿½ï¿½ï¿½ Callback: {data}")
 
-        # í¶• NUEVAS RUTAS
+        # ï¿½ï¿½ï¿½ NUEVAS RUTAS
         if data.startswith("menu:proveedor:"):
             await callback_menu_proveedor(query, data)
             return
@@ -142,6 +144,8 @@ async def callback_proveedor(query, data):
     """Registra pago a proveedor"""
     _, proveedor, monto = data.split(":")
     monto = -abs(float(monto))
+        # ğŸ†• ELIMINAR EL INGRESO DE CLIENTE
+    sheets_manager.eliminar_ultimo_movimiento_cliente()
 
     hora_actual = datetime.now().strftime("%H:%M")
 
@@ -154,16 +158,16 @@ async def callback_proveedor(query, data):
 
     mensaje = (
         f"âœ… **PAGO REGISTRADO**\n\n"
-        f"í³¤ Proveedor: {proveedor}\n"
-        f"í²° Monto: ${formatear_monto(abs(monto))}\n"
-        f"íµ Hora: {hora_actual}\n\n"
-        f"í³Š Total a {proveedor} (mes): ${formatear_monto(total_prov)}\n\n"
+        f"ï¿½ï¿½ï¿½ Proveedor: {proveedor}\n"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(abs(monto))}\n"
+        f"ï¿½ï¿½ï¿½ Hora: {hora_actual}\n\n"
+        f"ï¿½ï¿½ï¿½ Total a {proveedor} (mes): ${formatear_monto(total_prov)}\n\n"
         f"**HOY:**\n"
-        f"í²µ Ingresos: ${formatear_monto(totales_dia['ingresos'])}\n"
-        f"í²¸ Egresos: ${formatear_monto(abs(totales_dia['egresos']))}\n"
-        f"í³ˆ Neto: ${formatear_monto(totales_dia['neto'])}\n\n"
+        f"ï¿½ï¿½ï¿½ Ingresos: ${formatear_monto(totales_dia['ingresos'])}\n"
+        f"ï¿½ï¿½ï¿½ Egresos: ${formatear_monto(abs(totales_dia['egresos']))}\n"
+        f"ï¿½ï¿½ï¿½ Neto: ${formatear_monto(totales_dia['neto'])}\n\n"
         f"**MES:**\n"
-        f"í³… Saldo: ${formatear_monto(totales_mes['neto'])}"
+        f"ï¿½ï¿½ï¿½ Saldo: ${formatear_monto(totales_mes['neto'])}"
     )
 
     await query.edit_message_text(mensaje)
@@ -182,9 +186,9 @@ async def callback_especial(query, data):
 
     mensaje = (
         f"âœ… **REGISTRADO: {categoria}**\n\n"
-        f"í²° Monto: ${formatear_monto(abs(monto))}\n"
-        f"íµ Hora: {hora_actual}\n\n"
-        f"í³Š Saldo del dÃ­a: ${formatear_monto(totales_dia['neto'])}"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(abs(monto))}\n"
+        f"ï¿½ï¿½ï¿½ Hora: {hora_actual}\n\n"
+        f"ï¿½ï¿½ï¿½ Saldo del dÃ­a: ${formatear_monto(totales_dia['neto'])}"
     )
 
     await query.edit_message_text(mensaje)
@@ -211,14 +215,14 @@ async def callback_cliente(query, data):
 
     mensaje = (
         f"âœ… **INGRESO REGISTRADO**\n\n"
-        f"í²° Monto: ${formatear_monto(monto_float)}\n"
-        f"íµ Hora: {hora_actual}\n\n"
+        f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(monto_float)}\n"
+        f"ï¿½ï¿½ï¿½ Hora: {hora_actual}\n\n"
         f"**HOY:**\n"
-        f"í²µ Clientes: ${formatear_monto(totales_dia['clientes'])}\n"
-        f"í³ˆ Total: ${formatear_monto(totales_dia['ingresos'])}\n\n"
+        f"ï¿½ï¿½ï¿½ Clientes: ${formatear_monto(totales_dia['clientes'])}\n"
+        f"ï¿½ï¿½ï¿½ Total: ${formatear_monto(totales_dia['ingresos'])}\n\n"
         f"**MES:**\n"
-        f"í²° Clientes: ${formatear_monto(totales_mes['clientes'])}\n"
-        f"í³Š Saldo: ${formatear_monto(totales_mes['neto'])}"
+        f"ï¿½ï¿½ï¿½ Clientes: ${formatear_monto(totales_mes['clientes'])}\n"
+        f"ï¿½ï¿½ï¿½ Saldo: ${formatear_monto(totales_mes['neto'])}"
     )
 
     await query.edit_message_text(mensaje)
@@ -230,62 +234,62 @@ async def callback_consulta(query, data):
     if tipo == "ingreso_hoy":
         totales = finance_service.totales_dia()
         mensaje = (
-            f"í³¥ **INGRESOS DE HOY**\n\n"
-            f"í²° Total: ${formatear_monto(totales['ingresos'])}\n"
-            f"í·¾ Clientes: ${formatear_monto(totales['clientes'])}\n"
-            f"í³Š Movimientos: {totales['cantidad_movimientos']}"
+            f"ï¿½ï¿½ï¿½ **INGRESOS DE HOY**\n\n"
+            f"ï¿½ï¿½ï¿½ Total: ${formatear_monto(totales['ingresos'])}\n"
+            f"ï¿½ï¿½ï¿½ Clientes: ${formatear_monto(totales['clientes'])}\n"
+            f"ï¿½ï¿½ï¿½ Movimientos: {totales['cantidad_movimientos']}"
         )
 
     elif tipo == "egreso_hoy":
         totales = finance_service.totales_dia()
         mensaje = (
-            f"í³¤ **EGRESOS DE HOY**\n\n"
-            f"í²¸ Total: ${formatear_monto(abs(totales['egresos']))}"
+            f"ï¿½ï¿½ï¿½ **EGRESOS DE HOY**\n\n"
+            f"ï¿½ï¿½ï¿½ Total: ${formatear_monto(abs(totales['egresos']))}"
         )
 
     elif tipo == "ingreso_mes":
         totales = finance_service.totales_mes()
         mensaje = (
-            f"í³† **INGRESOS DEL MES**\n\n"
-            f"í²° Total: ${formatear_monto(totales['ingresos'])}\n"
-            f"í·¾ Clientes: ${formatear_monto(totales['clientes'])}\n"
-            f"í³… DÃ­as operativos: {totales['dias_operativos']}"
+            f"ï¿½ï¿½ï¿½ **INGRESOS DEL MES**\n\n"
+            f"ï¿½ï¿½ï¿½ Total: ${formatear_monto(totales['ingresos'])}\n"
+            f"ï¿½ï¿½ï¿½ Clientes: ${formatear_monto(totales['clientes'])}\n"
+            f"ï¿½ï¿½ï¿½ DÃ­as operativos: {totales['dias_operativos']}"
         )
 
     elif tipo == "egreso_mes":
         totales = finance_service.totales_mes()
         mensaje = (
-            f"í³‰ **EGRESOS DEL MES**\n\n"
-            f"í²¸ Total: ${formatear_monto(abs(totales['egresos']))}"
+            f"ï¿½ï¿½ï¿½ **EGRESOS DEL MES**\n\n"
+            f"ï¿½ï¿½ï¿½ Total: ${formatear_monto(abs(totales['egresos']))}"
         )
 
     elif tipo == "saldo_mes":
         totales = finance_service.totales_mes()
         mensaje = (
-            f"í²° **SALDO DEL MES**\n\n"
-            f"í²µ Ingresos: ${formatear_monto(totales['ingresos'])}\n"
-            f"í²¸ Egresos: ${formatear_monto(abs(totales['egresos']))}\n"
+            f"ï¿½ï¿½ï¿½ **SALDO DEL MES**\n\n"
+            f"ï¿½ï¿½ï¿½ Ingresos: ${formatear_monto(totales['ingresos'])}\n"
+            f"ï¿½ï¿½ï¿½ Egresos: ${formatear_monto(abs(totales['egresos']))}\n"
             f"â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n"
-            f"í³Š **NETO: ${formatear_monto(totales['neto'])}**"
+            f"ï¿½ï¿½ï¿½ **NETO: ${formatear_monto(totales['neto'])}**"
         )
 
     elif tipo == "estadisticas":
         stats = finance_service.estadisticas_avanzadas()
 
         if not stats:
-            mensaje = "í³Š No hay datos suficientes para estadÃ­sticas"
+            mensaje = "ï¿½ï¿½ï¿½ No hay datos suficientes para estadÃ­sticas"
         else:
             proy = stats['proyeccion']
             mensaje = (
-                f"í³Š **ESTADÃSTICAS AVANZADAS**\n\n"
-                f"í²° Promedio venta/dÃ­a: ${formatear_monto(stats['promedio_venta_diaria'])}\n"
-                f"í¼Ÿ Mejor dÃ­a: {stats['mejor_dia']} (${formatear_monto(stats['mejor_dia_monto'])})\n"
-                f"í³… DÃ­as operativos: {stats['dias_operativos']}\n\n"
-                f"í´® **PROYECCIÃ“N FIN DE MES:**\n"
-                f"í²µ Ingresos: ${formatear_monto(proy['ingresos'])}\n"
-                f"í²¸ Egresos: ${formatear_monto(proy['egresos'])}\n"
-                f"í³ˆ Neto: ${formatear_monto(proy['neto'])}\n\n"
-                f"í²¸ **TOP 5 GASTOS:**\n"
+                f"ï¿½ï¿½ï¿½ **ESTADÃSTICAS AVANZADAS**\n\n"
+                f"ï¿½ï¿½ï¿½ Promedio venta/dÃ­a: ${formatear_monto(stats['promedio_venta_diaria'])}\n"
+                f"ï¿½ï¿½ï¿½ Mejor dÃ­a: {stats['mejor_dia']} (${formatear_monto(stats['mejor_dia_monto'])})\n"
+                f"ï¿½ï¿½ï¿½ DÃ­as operativos: {stats['dias_operativos']}\n\n"
+                f"ï¿½ï¿½ï¿½ **PROYECCIÃ“N FIN DE MES:**\n"
+                f"ï¿½ï¿½ï¿½ Ingresos: ${formatear_monto(proy['ingresos'])}\n"
+                f"ï¿½ï¿½ï¿½ Egresos: ${formatear_monto(proy['egresos'])}\n"
+                f"ï¿½ï¿½ï¿½ Neto: ${formatear_monto(proy['neto'])}\n\n"
+                f"ï¿½ï¿½ï¿½ **TOP 5 GASTOS:**\n"
             )
 
             for prov, monto in stats['top_5_gastos'].items():
@@ -312,7 +316,7 @@ async def callback_menu_pagar(query):
         ])
 
     await query.edit_message_text(
-        f"í²¸ **EGRESOS PENDIENTES** ({len(pendientes)})\n\n"
+        f"ï¿½ï¿½ï¿½ **EGRESOS PENDIENTES** ({len(pendientes)})\n\n"
         "SeleccionÃ¡ para marcar como pagado:",
         reply_markup=InlineKeyboardMarkup(botones)
     )
@@ -327,8 +331,8 @@ async def callback_confirmar_pago(query, data):
 
         mensaje = (
             f"âœ… **MARCADO COMO PAGADO**\n\n"
-            f"í³¤ Proveedor: {proveedor}\n"
-            f"í²° Monto: ${formatear_monto(abs(monto))}"
+            f"ï¿½ï¿½ï¿½ Proveedor: {proveedor}\n"
+            f"ï¿½ï¿½ï¿½ Monto: ${formatear_monto(abs(monto))}"
         )
 
         await query.edit_message_text(mensaje)
