@@ -1,20 +1,19 @@
 services:
-  fiambreria-bot:
+  asistente:
     build: .
     container_name: asistente
     restart: unless-stopped
+    volumes:
+      - ./credential.json:/app/credential.json:ro
+      - ./logs:/app/logs
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     env_file:
       - .env
-    volumes:
-      # Persistir la base de datos
-      - ./db:/app/db
-      # Si tienes credentials de Google Sheets
-      - ./credentials.json:/app/credentials.json:ro
-    environment:
-      - TZ=America/Argentina/Buenos_Aires
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
 
