@@ -8,6 +8,7 @@ services:
       - ./logs:/app/logs
     environment:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TZ=America/Argentina/Buenos_Aires
     env_file:
       - .env
     networks:

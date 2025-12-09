@@ -7,6 +7,10 @@ WORKDIR /app
 # Copiar archivos de dependencias primero (para aprovechar cache de Docker)
 COPY requirements.txt .
 
+# Setear hora
+ENV TZ=America/Argentina/Buenos_Aires
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Instalar dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
